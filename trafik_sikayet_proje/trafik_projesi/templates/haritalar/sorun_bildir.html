@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Sorun Bildir</h1>
+
+  <div id="map" style="height: 400px;"></div>
+
+  <div class="sorun-bildir">
+    <h2>Sorun Bildir</h2>
+    <form method="post" enctype="multipart/form-data">  
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="konum">Konum:</label>
+        <input type="text" id="konum" name="konum" readonly>
+      </div>
+      <div class="form-group">
+        <label for="kategori">Kategori:</label>
+        {{ form.kategori }}
+      </div>
+      <div class="form-group">
+        <label for="aciklama">Açıklama:</label>
+        {{ form.aciklama }}
+      </div>
+      <div class="form-group">
+        <label for="gorsel">Görsel Yükle:</label> 
+        {{ form.gorsel }}
+      </div>
+      <button type="submit">Bildir</button>
+    </form>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+ 
+  var map = L.map('map').setView([41.015137, 28.979530], 13);
+
+ 
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  var marker;
+
+  
+map.on('click', function(e) {
+  var url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + e.latlng.lat + '&lon=' + e.latlng.lng;
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      var adres = data.display_name;
+
+     
+      var adresParcalari = adres.split(", ");
+      var binaNo = adresParcalari[0]; 
+      var sokakCadde = adresParcalari[1]; 
+      var mahalle = adresParcalari[2]; 
+      var ilce = adresParcalari[adresParcalari.length - 3]; 
+      var il = adresParcalari[adresParcalari.length - 2]; 
+
+      
+      var detayliKonum = il + " - " + ilce + " - " + mahalle + " - " + sokakCadde + " - " + binaNo;
+
+      document.getElementById('konum').value = detayliKonum;
+
+      if (marker) {
+        map.removeLayer(marker);
+      }
+
+      marker = L.marker(e.latlng).addTo(map);
+    })
+    .catch(error => {
+      console.error('Nominatim API hatası:', error);
+      window.alert('Konum bulunamadı.');
+    });
+});
+
+  
+  function adresiFormatla(adres) {
+    var adresParcalari = adres.split(", ");
+    var il = adresParcalari.pop();
+    var ilce = adresParcalari.pop();
+    var mahalle = adresParcalari.pop();
+    var sokakCaddeNo = adresParcalari.slice(-2).join(", ");
+    var formatliAdres = il + " - " + ilce + " - " + mahalle + " - " + sokakCaddeNo;
+    return formatliAdres;
+  }
+  
+</script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Son Bildirilen Sorunlar</h1>
+
+<ul class="list-group">
+    {% for sorun in sorunlar %}
+    <li class="list-group-item">
+        <h3>{{ sorun.kategori }}</h3>
+        <p><strong>Konum:</strong> {{ sorun.konum }}</p>
+        <p><strong>Açıklama:</strong> {{ sorun.aciklama|truncatewords:20 }}</p>
+        <p><strong>Tarih:</strong> {{ sorun.tarih }}</p>
+
+        
+        {% if sorun.gorsel %}
+        <div style="margin-bottom: 10px;">
+            <img src="{{ sorun.gorsel.url }}" alt="Sorun Görseli" style="max-width: 150px; height: auto; border: 1px solid #ddd;">
+        </div>
+        {% else %}
+        <p><em>Bu sorun için görsel eklenmemiş.</em></p>
+        {% endif %}
+
+        
+        <a href="{% url 'sorun_detay' sorun.id %}" class="btn btn-primary">Detayları Gör</a>
+    </li>
+    {% empty %}
+    <p>Henüz bildirilen bir sorun bulunmamaktadır.</p>
+    {% endfor %}
+</ul>
+
+
+<div class="pagination mt-3">
+    {% if is_paginated %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Önceki</a>
+            {% endif %}
+
+            <span class="btn btn-info disabled">
+                Sayfa {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Sonraki</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

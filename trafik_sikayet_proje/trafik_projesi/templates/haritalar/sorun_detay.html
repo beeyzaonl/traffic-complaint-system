@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container"> 
+    <div class="row">
+        <div class="col-md-8 offset-md-2"> 
+<h3><i>{{ sorun.kategori }}</i></h3>
+<p>Konum: <a href="{% url 'index' %}">{{ sorun.konum }}</a></p>
+    <p>Açıklama: {{ sorun.aciklama }}</p>
+    <p>Bildiren: {{ sorun.kullanici.username }}</p>
+    <p>Tarih: {{ sorun.tarih }}</p>
+
+
+    {% if sorun.gorsel %}
+    <div>
+        <h3>Eklenmiş Görsel</h3>
+        <img src="{{ sorun.gorsel.url }}" alt="Sorun Görseli" style="max-width: 400px; height: auto; border: 1px solid #ddd; margin-bottom: 10px;">
+    </div>
+    {% endif %}
+
+    <a href="{% url 'sorun_oyla' sorun.id %}" class="btn btn-primary">Oyla ({{ sorun.oylar }})</a>
+
+    <h3>Yorumlar</h3>
+    <ul>
+        {% for yorum in yorumlar %}
+            <li>{{ yorum.kullanici.username }}: {{ yorum.icerik }}</li>
+        {% endfor %}
+    </ul>
+
+    {% if user.is_authenticated %}
+    <h3>Yorum Yap</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Gönder</button>
+    </form>
+    {% endif %}
+
+    <div id="detay-map" style="height: 400px;"></div> 
+
+    <script>
+      var map = L.map('detay-map').setView([{{ sorun.enlem }}, {{ sorun.boylam }}], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+      
+      L.marker([{{ sorun.enlem }}, {{ sorun.boylam }}]).addTo(map)
+        .bindPopup("<b>{{ sorun.kategori }}</b><br>{{ sorun.aciklama }}");
+    </script>
+{% endblock %}
+</div>
+</div>
+</div>

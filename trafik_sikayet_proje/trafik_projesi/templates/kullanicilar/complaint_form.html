@@ -1,0 +1,16 @@
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <label for="id_title">Başlık:</label>
+        {{ form.title }}
+    </div>
+    <div>
+        <label for="id_description">Açıklama:</label>
+        {{ form.description }}
+    </div>
+    <div>
+        <label for="id_image">Fotoğraf Yükle:</label>
+        {{ form.image }}
+    </div>
+    <button type="submit">Şikayeti Gönder</button>
+</form>

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Trafik Bildirim Haritası</h1>
+
+  {% if not user.is_authenticated %}
+      <p style="text-align: center; font-size: 14px; color: #333; font-weight: bold; margin-top: 10px;">
+          Yerel Trafik Şikayet Sistemi’ne Hoş Geldiniz! 
+          Çevrenizdeki trafik sorunlarını hızlıca bildirin, güvenli 
+          ve sorunsuz bir yolculuğa katkıda bulunun. 
+          Harita üzerinde mevcut sorunları görün ve kolayca yeni 
+          bildirim ekleyin. 
+          <a href="{% url 'login' %}" style="color: #007bff; font-weight: bold;">Giriş Yap</a> veya 
+          <a href="{% url 'register' %}" style="color: #28a745; font-weight: bold;">Kayıt Ol</a>.
+      </p>
+  {% endif %}
+
+  <div id="map" style="height: 500px;"></div>  
+
+  <h2>Son Bildirilen Sorunlar</h2>
+
+  <div class="sorun-listesi">
+    {% for sorun in sorunlar %}
+      <a href="{% url 'sorun_detay' sorun.id %}" class="sorun-item">
+        <div class="sorun-icerik">
+          <h3>{{ sorun.kategori }}</h3> 
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+  var map = L.map('map').setView([41.015137, 28.979530], 13); 
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+</script>
+{% endblock %}

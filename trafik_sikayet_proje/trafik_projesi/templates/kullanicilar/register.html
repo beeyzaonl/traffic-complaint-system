@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  /* Yanlardaki boşlukları tamamen kaldırmak için */
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #222;
+    /* Sayfa arka planı */
+  }
+</style>
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+  <div class="register-container"
+    style="background-color: #1c1c1c; padding: 20px; border-radius: 8px; width: 300px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); color: white;">
+    <h2 style="text-align: center; margin-bottom: 20px; font-size: 24px; font-weight: bold; color: #ffffff;">Kayıt Ol</h2>
+    <form method="post">
+
+      {% csrf_token %}
+      <div style="margin-bottom: 15px;">
+        <label style="font-size: 14px; font-weight: bold; color: #cccccc;">{{ form.username.label }}</label>
+        {{ form.username }}
+      </div>
+      <div style="margin-bottom: 15px;">
+        <label style="font-size: 14px; font-weight: bold; color: #cccccc;">{{ form.password1.label }}</label>
+        {{ form.password1 }}
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label style="font-size: 14px; font-weight: bold; color: #cccccc;">{{ form.password2.label }}</label>
+        {{ form.password2 }}
+      </div>
+      <button type="submit"
+        style="width: 100%; padding: 10px; background-color: #007bff; border: none; color: white; font-size: 16px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+        Kayıt Ol
+      </button>
+    </form>
+    <a href="{% url 'login' %}"
+      style="display: block; text-align: center; margin-top: 15px; color: #007bff; text-decoration: none; font-size: 14px;">Zaten
+      hesabınız var mı? Giriş Yap</a>
+  </div>
+</div>
+{% endblock %}

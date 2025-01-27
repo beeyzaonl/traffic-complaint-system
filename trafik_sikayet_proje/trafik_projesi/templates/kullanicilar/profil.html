@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profil-container">
+  <h1>{{ profil.kullanici.username }}</h1>
+<img src="{% if profil.kullanici.userprofile.profile_picture %}{{ profil.kullanici.userprofile.profile_picture.url }}{% endif %}" alt="Profil Resmi" style="width: 100px; height: 100px; border-radius: 50%;">
+<h2 style="color: #007bff;">Puan: {{ profil.puan }}</h2>
+
+  <h2>Bildirilen Sorunlar</h2>
+  <ul>
+    {% for sorun in sorunlar %}
+      <li><a href="{% url 'sorun_detay' sorun.id %}">{{ sorun.kategori }} - {{ sorun.konum }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <h2>Yorumlar</h2>
+  <ul>
+    {% for yorum in yorumlar %}
+      <li>{{ yorum.icerik }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock content %}
